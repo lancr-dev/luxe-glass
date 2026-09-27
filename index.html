@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore Liquid Glass web design with Lance. Discover thoughtful transparency, layered interfaces, and a hands-on preview for your next website."
+    />
+    <meta name="theme-color" content="#edf2f6" />
+    <meta name="author" content="Lance" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Luxe Glass — A Web Design Showcase by Lance"
+    />
+    <meta
+      property="og:description"
+      content="See how thoughtful transparency and fluid controls can bring depth to your next website."
+    />
+    <title>Luxe Glass | Lance Ducante</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230d283e'/%3E%3Cpath d='M10 8v16h12' fill='none' stroke='%23edf2f6' stroke-width='3'/%3E%3Cpath d='M16 8h6v10' fill='none' stroke='%237ab8d6' stroke-width='2'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header" data-header>
+      <div class="container header-container">
+        <div class="header-bar liquid-glass glass-nav">
+          <a
+            class="brand"
+            href="#home"
+            aria-label="Liquid Glass by Lance, home"
+          >
+            <svg
+              class="brand-symbol"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 32 32"
+              width="44"
+              height="44"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <rect width="32" height="32" rx="8" fill="#0d283e" />
+              <path
+                d="M10 8v16h12"
+                fill="none"
+                stroke="#edf2f6"
+                stroke-width="3"
+              />
+              <path
+                d="M16 8h6v10"
+                fill="none"
+                stroke="#7ab8d6"
+                stroke-width="2"
+              />
+            </svg>
+            <span class="brand-text">Luxe Glass</span>
+          </a>
+
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="primary-navigation"
+            data-menu-toggle
+            hidden
+          >
+            <span>Menu</span
+            ><span class="menu-toggle-icon" aria-hidden="true"></span>
+          </button>
+          <nav
+            class="site-nav"
+            id="primary-navigation"
+            aria-label="Primary navigation"
+            data-navigation
+          >
+            <ul class="nav-list">
+              <li><a class="nav-link" href="#home">Home</a></li>
+              <li><a class="nav-link" href="#about">About</a></li>
+              <li><a class="nav-link" href="#explore">Explore</a></li>
+              <li><a class="nav-link" href="#applications">Use cases</a></li>
+              <li>
+                <a class="nav-link nav-link-cta" href="#start"
+                  >Your project <span aria-hidden="true">↗</span></a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <button
+          class="transparency-toggle"
+          type="button"
+          aria-pressed="false"
+          data-transparency-toggle
+          hidden
+        >
+          Solid surfaces
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <section class="hero section" id="home" aria-labelledby="hero-title">
+        <div class="container hero-layout">
+          <div class="hero-content">
+            <p class="eyebrow">Design study / 01 — Liquid Glass</p>
+            <h1 id="hero-title">A little depth.<br />A different feeling.</h1>
+            <p class="hero-description">
+              Your content stays in focus. Light-catching controls float above
+              it. Discover a web design style that feels clear, tactile, and
+              quietly expressive.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#explore"
+                >Explore the material <span aria-hidden="true">↗</span></a
+              >
+              <a class="text-link" href="#start">Imagine it on your website</a>
+            </div>
+            <p class="hero-note">
+              Designed for people. Built with HTML, CSS, and JavaScript.
+            </p>
+          </div>
+          <figure class="hero-study" aria-labelledby="hero-study-caption">
+            <div class="material-scene scene-daylight">
+              <div class="scene-editorial" aria-hidden="true">
+                <span class="scene-kicker">A study in perspective</span>
+                <span class="scene-word">Clear<br />by design.</span>
+                <span class="scene-index">FORM / LIGHT / DEPTH</span>
+              </div>
+              <div class="study-dock liquid-glass glass-control">
+                <span class="study-dock-label">A new perspective</span>
+                <a class="study-dock-link" href="#explore"
+                  >Take a closer look <span aria-hidden="true">↗</span></a
+                >
+              </div>
+            </div>
+            <figcaption id="hero-study-caption">
+              <span>01 / The material in context</span
+              ><span>Content below. Controls above.</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="about section" id="about" aria-labelledby="about-title">
+        <div class="container">
+          <div class="section-heading about-heading">
+            <p class="eyebrow">01 / Understand the design</p>
+            <h2 id="about-title">More than a transparent surface.</h2>
+            <p class="section-intro">
+              Liquid Glass brings a sense of light and depth to an interface.
+              Translucent controls reveal a softened view of what sits behind
+              them, while fine edges and gentle state changes make each
+              interaction feel connected.
+            </p>
+          </div>
+          <dl class="principle-list">
+            <div class="principle-item">
+              <dt>
+                <span class="item-number" aria-hidden="true">01</span>See the
+                context
+              </dt>
+              <dd>
+                A navigation bar can float above a project image without
+                completely blocking the story beneath it.
+              </dd>
+            </div>
+            <div class="principle-item">
+              <dt>
+                <span class="item-number" aria-hidden="true">02</span>Feel the
+                hierarchy
+              </dt>
+              <dd>
+                Light-catching edges and subtle depth distinguish controls from
+                the content they help you explore.
+              </dd>
+            </div>
+            <div class="principle-item">
+              <dt>
+                <span class="item-number" aria-hidden="true">03</span>Follow the
+                interaction
+              </dt>
+              <dd>
+                Small changes in tint and position connect a selection to its
+                result, keeping movement purposeful.
+              </dd>
+            </div>
+          </dl>
+          <aside class="design-note" aria-labelledby="design-note-title">
+            <h3 id="design-note-title">The restraint is part of the design.</h3>
+            <p>
+              Glass works best in a few useful places. Headlines, detailed
+              information, and longer reading stay on calm, stable surfaces.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section
+        class="explore section"
+        id="explore"
+        aria-labelledby="explore-title"
+      >
+        <div class="container">
+          <div class="section-heading explore-heading">
+            <p class="eyebrow">02 / The material studio</p>
+            <h2 id="explore-title">See what a surface can change.</h2>
+            <p class="section-intro">
+              Switch the backdrop and adjust the glass. Notice how the same
+              control picks up a different mood while its message stays
+              readable.
+            </p>
+          </div>
+          <div class="studio-layout">
+            <figure class="studio-preview" aria-labelledby="studio-caption">
+              <div
+                class="material-scene studio-scene"
+                data-preview
+                data-scene="daylight"
+                data-surface="glass"
+              >
+                <div class="scene-editorial" aria-hidden="true">
+                  <span class="scene-kicker"
+                    >Material / light / perspective</span
+                  >
+                  <span class="scene-word">Room<br />to see.</span>
+                  <span class="scene-index">THE LIQUID GLASS COLLECTION</span>
+                </div>
+                <div class="preview-toolbar liquid-glass glass-control">
+                  <div class="preview-toolbar-copy">
+                    <span class="preview-toolbar-label">Your next website</span>
+                    <strong>Clarity, with character.</strong>
+                  </div>
+                  <a class="button button-primary button-compact" href="#start"
+                    >Choose this direction <span aria-hidden="true">↗</span></a
+                  >
+                </div>
+              </div>
+              <figcaption id="studio-caption">
+                A sample website control over an editorial backdrop.
+              </figcaption>
+            </figure>
+
+            <form
+              class="studio-controls"
+              aria-label="Customize the material preview"
+              data-studio-form
+            >
+              <fieldset
+                class="studio-control-group"
+                data-studio-controls
+                disabled
+              >
+                <legend>Make it your own</legend>
+                <fieldset class="control-fieldset">
+                  <legend>Backdrop</legend>
+                  <div class="scene-options">
+                    <label class="scene-option"
+                      ><input
+                        type="radio"
+                        name="scene"
+                        value="daylight"
+                        checked
+                      /><span
+                        class="scene-swatch swatch-daylight"
+                        aria-hidden="true"
+                      ></span
+                      ><span>Daylight</span></label
+                    >
+                    <label class="scene-option"
+                      ><input type="radio" name="scene" value="tide" /><span
+                        class="scene-swatch swatch-tide"
+                        aria-hidden="true"
+                      ></span
+                      ><span>Tide</span></label
+                    >
+                    <label class="scene-option"
+                      ><input type="radio" name="scene" value="ink" /><span
+                        class="scene-swatch swatch-ink"
+                        aria-hidden="true"
+                      ></span
+                      ><span>Ink</span></label
+                    >
+                  </div>
+                </fieldset>
+                <div class="range-control">
+                  <div class="control-label-row">
+                    <label for="glass-blur">Background softness</label
+                    ><output id="blur-value" for="glass-blur">18 px</output>
+                  </div>
+                  <input
+                    id="glass-blur"
+                    name="blur"
+                    type="range"
+                    min="0"
+                    max="24"
+                    step="1"
+                    value="18"
+                    aria-describedby="blur-help"
+                  />
+                  <p class="field-help" id="blur-help">
+                    A softer backdrop brings the control into focus.
+                  </p>
+                </div>
+                <div class="range-control">
+                  <div class="control-label-row">
+                    <label for="glass-opacity">Surface strength</label
+                    ><output id="opacity-value" for="glass-opacity">72%</output>
+                  </div>
+                  <input
+                    id="glass-opacity"
+                    name="opacity"
+                    type="range"
+                    min="65"
+                    max="95"
+                    step="1"
+                    value="72"
+                    aria-describedby="opacity-help"
+                  />
+                  <p class="field-help" id="opacity-help">
+                    A stronger surface reveals less of the background.
+                  </p>
+                </div>
+                <label class="checkbox-control"
+                  ><input
+                    type="checkbox"
+                    name="solid-preview"
+                    data-solid-preview
+                  /><span>Compare with a solid surface</span></label
+                >
+                <button class="button button-secondary" type="reset">
+                  Reset preview
+                </button>
+              </fieldset>
+              <p class="studio-status" role="status" data-studio-status></p>
+              <p class="field-help" data-transparency-notice hidden>
+                Your solid-surface preference is active. The preview stays
+                opaque for readability.
+              </p>
+              <p class="field-help" data-blur-notice hidden>
+                This browser is showing the solid-surface version of the
+                preview.
+              </p>
+              <noscript
+                ><p class="field-help">
+                  The interactive controls need JavaScript. You can still
+                  explore the design and read every section.
+                </p></noscript
+              >
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="applications section"
+        id="applications"
+        aria-labelledby="applications-title"
+      >
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">03 / Find your fit</p>
+            <h2 id="applications-title">Where could your brand take it?</h2>
+            <p class="section-intro">
+              Start with what your visitors need to see. Add glass where it
+              makes exploring that content feel natural.
+            </p>
+          </div>
+          <div class="application-list">
+            <article class="application-item">
+              <span class="application-index" aria-hidden="true">01 /</span>
+              <div class="application-content">
+                <h3>Creative portfolios</h3>
+                <p>
+                  Give photography, design, and project imagery the space they
+                  deserve. A compact floating index helps visitors move between
+                  your work.
+                </p>
+              </div>
+              <p class="application-detail">
+                <span>Glass belongs in</span>Project navigation &amp; image
+                controls
+              </p>
+            </article>
+            <article class="application-item">
+              <span class="application-index" aria-hidden="true">02 /</span>
+              <div class="application-content">
+                <h3>Product showcases</h3>
+                <p>
+                  Keep the product at the center of the page. Layer a concise
+                  selector above the presentation so visitors can explore
+                  different views.
+                </p>
+              </div>
+              <p class="application-detail">
+                <span>Glass belongs in</span>View selectors &amp; contextual
+                actions
+              </p>
+            </article>
+            <article class="application-item">
+              <span class="application-index" aria-hidden="true">03 /</span>
+              <div class="application-content">
+                <h3>Brand &amp; service websites</h3>
+                <p>
+                  Introduce your business with a distinctive visual direction.
+                  Keep the information straightforward and use material details
+                  to give navigation character.
+                </p>
+              </div>
+              <p class="application-detail">
+                <span>Glass belongs in</span>Navigation &amp; compact menus
+              </p>
+            </article>
+          </div>
+          <p class="application-note">
+            For text-heavy pages, forms, and dense data, solid surfaces usually
+            make the better foundation. A website can combine both treatments.
+          </p>
+        </div>
+      </section>
+
+      <section
+        class="process section"
+        id="process"
+        aria-labelledby="process-title"
+      >
+        <div class="container process-layout">
+          <div class="section-heading">
+            <p class="eyebrow">04 / From direction to website</p>
+            <h2 id="process-title">Your brand comes first.</h2>
+            <p class="section-intro">
+              I'm Lance, a freelance web developer. This showcase is a starting
+              point for a conversation about your website. The final design
+              should fit your content, your audience, and the way your business
+              works.
+            </p>
+            <a class="text-link" href="#start"
+              >Prepare your project brief <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <ol class="process-list">
+            <li>
+              <h3>Define the purpose</h3>
+              <p>
+                Outline your audience, key pages, and the action you want
+                visitors to take.
+              </p>
+            </li>
+            <li>
+              <h3>Shape the visual direction</h3>
+              <p>
+                Use your branding and content to decide the palette, layout, and
+                places where glass adds value.
+              </p>
+            </li>
+            <li>
+              <h3>Build around real use</h3>
+              <p>
+                Develop the layout for desktop and mobile, with clear navigation
+                and accessible controls.
+              </p>
+            </li>
+            <li>
+              <h3>Refine before launch</h3>
+              <p>
+                Review readability, keyboard access, motion preferences, and
+                fallback surfaces across target browsers.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="faq section" id="faq" aria-labelledby="faq-title">
+        <div class="container faq-layout">
+          <div class="section-heading">
+            <p class="eyebrow">05 / A few useful answers</p>
+            <h2 id="faq-title">Before you choose.</h2>
+          </div>
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary>Is Liquid Glass the same as glassmorphism?</summary>
+              <div class="faq-answer">
+                <p>
+                  They share translucency, blur, and depth. In this showcase,
+                  Liquid Glass puts more emphasis on a coherent material for
+                  controls: fine edge highlights, contextual tint, and fluid
+                  changes between interaction states.
+                </p>
+              </div>
+            </details>
+            <details class="faq-item">
+              <summary>Will the design work on mobile?</summary>
+              <div class="faq-answer">
+                <p>
+                  The layout should adapt around smaller screens: fewer floating
+                  elements, comfortable touch targets, and compact navigation.
+                  The final website needs testing with its actual content on
+                  mobile as well as desktop.
+                </p>
+              </div>
+            </details>
+            <details class="faq-item">
+              <summary>
+                Does every part of the website need to be glass?
+              </summary>
+              <div class="faq-answer">
+                <p>
+                  No. The strongest results use it selectively. Navigation and
+                  contextual controls can use glass while body copy, forms, and
+                  detailed information stay on stable surfaces.
+                </p>
+              </div>
+            </details>
+            <details class="faq-item">
+              <summary>Can it match my brand colors?</summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Backgrounds, accent colors, typography, and surface tint
+                  can all follow your brand. Contrast and readability guide how
+                  much color and transparency each component uses.
+                </p>
+              </div>
+            </details>
+            <details class="faq-item">
+              <summary>What happens when blur is unavailable?</summary>
+              <div class="faq-answer">
+                <p>
+                  A solid or more opaque surface keeps the same content and
+                  controls usable. Glass is a visual enhancement; the page
+                  should remain understandable without the effect.
+                </p>
+              </div>
+            </details>
+            <details class="faq-item">
+              <summary>Will it look exactly like native Liquid Glass?</summary>
+              <div class="faq-answer">
+                <p>
+                  This is a web interpretation. CSS can suggest translucency,
+                  depth, and light-catching edges, but it does not reproduce a
+                  native rendering engine's optical behavior exactly.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="start section" id="start" aria-labelledby="start-title">
+        <div class="container start-layout">
+          <div class="start-content">
+            <p class="eyebrow">06 / Make it yours</p>
+            <h2 id="start-title">Can you picture your website here?</h2>
+            <p class="section-intro">
+              Tell me what you're building and what you liked about this
+              direction. Use the brief as a starting point, then send it to me
+              through the channel where we're already talking.
+            </p>
+            <ul class="brief-prompts">
+              <li>What does your business or project do?</li>
+              <li>What should visitors be able to find or do?</li>
+              <li>Which parts of this design feel right for your brand?</li>
+            </ul>
+          </div>
+          <div class="project-brief">
+            <label class="brief-label" for="project-brief"
+              >Your project brief</label
+            >
+            <p class="field-help" id="brief-help">
+              Edit this message to fit your project. This page does not send it.
+            </p>
+            <textarea
+              id="project-brief"
+              name="project-brief"
+              rows="10"
+              maxlength="5000"
+              aria-describedby="brief-help"
+              spellcheck="true"
+            >
+Hi Lance! I'm interested in a Liquid Glass website.
+
+My business or project:
+The pages or features I need:
+What I liked about this showcase:
+My brand colors or existing website:
+My preferred timeline:
+My budget range:</textarea
+            >
+            <div class="brief-actions">
+              <button
+                class="button button-primary"
+                type="button"
+                data-copy-brief
+                hidden
+              >
+                Copy project brief
+              </button>
+              <p class="brief-status" role="status" data-copy-status></p>
+            </div>
+            <p class="field-help">
+              You can also select and copy the text yourself.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-layout">
+        <a class="footer-brand" href="#home"
+          >Liquid Glass <span>by Lance</span></a
+        >
+        <p>A web design direction for your next project.</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="#faq">Questions</a
+          ><a href="#home">Back to top <span aria-hidden="true">↑</span></a>
+        </nav>
+        <small class="footer-credit"
+          >An independent web design showcase. &copy; 2026 Lance Ducante</small
+        >
+      </div>
+    </footer>
+  </body>
+</html>
