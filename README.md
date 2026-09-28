@@ -1,4 +1,4 @@
-# Luxe Glass — Deep Space Edition
+# Luxe Glass | Website
 
 Luxe Glass is a dark, space-inspired landing-page concept that explores a web interpretation of liquid-glass design. An orbital hero, luminous edges, and layered translucent panels sit against a near-black canvas with ice-blue and violet accents. The illustrations are built with CSS. Space Grotesk and Space Mono are hosted locally, with no external media or font requests.
 
