@@ -117,7 +117,7 @@
         header.dataset.scrolled = scrolled;
       }
 
-      // Account for the preference button and enlarged header text.
+      // Keep anchored sections clear of the desktop header.
       const clearance = mobileViewport.matches ? 24 : header.offsetHeight + 24;
 
       root.style.scrollPaddingBlockStart = `${clearance}px`;
@@ -230,6 +230,7 @@
     const opacity = document.getElementById('glass-opacity');
     const blurOutput = document.getElementById('blur-value');
     const opacityOutput = document.getElementById('opacity-value');
+    const sceneLabel = document.querySelector('[data-scene-label]');
     const comparison = document.querySelector('[data-solid-preview]');
     const status = document.querySelector('[data-studio-status]');
 
@@ -259,9 +260,9 @@
     const preferenceKey = 'lance-liquid-glass:surface';
 
     const sceneNames = new Map([
-      ['daylight', 'Daylight'],
-      ['tide', 'Tide'],
-      ['ink', 'Ink'],
+      ['nebula', 'Nebula'],
+      ['aurora', 'Aurora'],
+      ['eclipse', 'Eclipse'],
     ]);
 
     const systemPreferences = [
@@ -306,12 +307,10 @@
 
       const selected = form.querySelector('input[name="scene"]:checked');
 
-      const scene = sceneNames.has(selected?.value)
-        ? selected.value
-        : 'daylight';
+      const scene = sceneNames.has(selected?.value) ? selected.value : 'nebula';
 
-      const blurValue = boundedValue(blur, 0, 24, 18);
-      const opacityValue = boundedValue(opacity, 65, 95, 72);
+      const blurValue = boundedValue(blur, 0, 32, 18);
+      const opacityValue = boundedValue(opacity, 35, 95, 58);
 
       root.dataset.transparency = globalSolid ? 'solid' : 'glass';
       toggle.setAttribute('aria-pressed', String(globalSolid));
@@ -325,6 +324,10 @@
 
       preview.dataset.scene = scene;
       preview.dataset.surface = previewSolid ? 'solid' : 'glass';
+
+      if (sceneLabel) {
+        sceneLabel.textContent = sceneNames.get(scene).toUpperCase();
+      }
 
       preview.style.setProperty('--preview-blur', `${blurValue}px`);
       preview.style.setProperty(
@@ -350,7 +353,7 @@
       const summary = `${sceneNames.get(scene)} backdrop. ${
         previewSolid
           ? 'Solid surface.'
-          : `Glass surface, ${blurValue} pixels of softness, ${opacityValue}% surface strength.`
+          : `Glass surface, ${blurValue} pixels of diffusion, ${opacityValue}% surface opacity.`
       }`;
 
       if (announce) {
@@ -481,7 +484,7 @@
     button.hidden = false;
   }
 
-  // Material controls affect header height, so initialize them first.
+  // Apply surface preferences before initializing the remaining interactions.
   initializeMaterialStudio();
   initializeNavigation();
   initializeBriefCopy();

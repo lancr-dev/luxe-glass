@@ -1,10 +1,12 @@
-# Luxe Glass
+# Luxe Glass — Deep Space Edition
 
-Luxe Glass is a responsive, accessible landing-page concept that explores a web interpretation of liquid-glass design. It uses layered surfaces, transparency, backdrop blur, and subtle interaction while keeping the content readable when those visual effects are unavailable.
+Luxe Glass is a dark, space-inspired landing-page concept that explores a web interpretation of liquid-glass design. An orbital hero, luminous edges, and layered translucent panels sit against a near-black canvas with ice-blue and violet accents. The illustrations are built with CSS, with no external media or font dependencies.
 
 ## Features
 
-- Interactive material preview with backdrop, blur, and opacity controls
+- Interactive material preview with Nebula, Aurora, and Eclipse environments
+- Adjustable diffusion (0–32 px) and surface opacity (35–95%)
+- CSS orbital artwork and illustrated material and use-case cards
 - Solid-surface mode and browser preference fallbacks
 - Responsive navigation and layouts
 - Editable project brief with a copy-to-clipboard action
