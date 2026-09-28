@@ -21,6 +21,13 @@
       type="image/svg+xml"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230d283e'/%3E%3Cpath d='M10 8v16h12' fill='none' stroke='%23edf2f6' stroke-width='3'/%3E%3Cpath d='M16 8h6v10' fill='none' stroke='%237ab8d6' stroke-width='2'/%3E%3C/svg%3E"
     />
+    <link
+      rel="preload"
+      href="assets/fonts/space-grotesk-latin-variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
   </head>
@@ -67,7 +74,8 @@
             class="menu-toggle"
             type="button"
             aria-expanded="false"
-            aria-controls="primary-navigation"
+            aria-controls="mobile-menu"
+            aria-haspopup="dialog"
             data-menu-toggle
             hidden
           >
@@ -97,6 +105,28 @@
         </div>
       </div>
     </header>
+
+    <dialog
+      class="mobile-sidebar liquid-glass"
+      id="mobile-menu"
+      aria-labelledby="mobile-menu-title"
+      data-mobile-menu
+    >
+      <div class="sidebar-heading">
+        <div>
+          <p class="eyebrow">DEEP SPACE EDITION</p>
+          <h2 id="mobile-menu-title">Explore the space.</h2>
+        </div>
+        <button class="sidebar-close" type="button" data-menu-close autofocus>
+          <span class="visually-hidden">Close navigation</span>
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="sidebar-navigation" data-sidebar-navigation></div>
+      <p class="sidebar-note">
+        A study in light.<br />A different kind of depth.
+      </p>
+    </dialog>
 
     <main id="main-content" tabindex="-1">
       <section class="hero section" id="home" aria-labelledby="hero-title">

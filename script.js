@@ -12,28 +12,55 @@
     if (!header || !menuButton || !navigation) return;
 
     const links = [...navigation.querySelectorAll('a[href^="#"]')];
-    let menuOpen = false;
+    const sidebar = document.querySelector('[data-mobile-menu]');
+    const sidebarNavigation = document.querySelector(
+      '[data-sidebar-navigation]',
+    );
+    const closeButton = document.querySelector('[data-menu-close]');
+    const navigationHome = navigation.parentElement;
+    const supportsSidebar = Boolean(
+      sidebar &&
+      sidebarNavigation &&
+      closeButton &&
+      typeof sidebar.showModal === 'function',
+    );
 
-    function setMenuOpen(open, restoreFocus = false) {
-      menuOpen = mobileViewport.matches && open;
-      menuButton.setAttribute('aria-expanded', String(menuOpen));
+    function synchronizeMenuState() {
+      const open = Boolean(sidebar?.open);
+      menuButton.setAttribute('aria-expanded', String(open));
+      root.classList.toggle('menu-open', open);
+    }
+
+    function closeMenu(restoreFocus = true) {
+      if (!sidebar?.open) return;
+
+      sidebar.close();
+      synchronizeMenuState();
 
       if (restoreFocus && mobileViewport.matches) {
-        menuButton.focus();
+        menuButton.focus({ preventScroll: true });
       }
-
-      navigation.hidden = mobileViewport.matches && !menuOpen;
     }
 
     function synchronizeViewport() {
-      if (mobileViewport.matches) {
-        menuButton.hidden = false;
-        setMenuOpen(false, navigation.contains(document.activeElement));
-      } else {
-        setMenuOpen(false);
+      const focusInNavigation = navigation.contains(document.activeElement);
+      const focusInSidebar = sidebar?.contains(document.activeElement);
+      const focusOnMenu = document.activeElement === menuButton;
+      closeMenu(false);
 
-        if (document.activeElement === menuButton) {
-          links[0]?.focus();
+      if (mobileViewport.matches && supportsSidebar) {
+        menuButton.hidden = false;
+        sidebarNavigation.append(navigation);
+
+        if (focusInNavigation || focusInSidebar) {
+          menuButton.focus({ preventScroll: true });
+        }
+      } else {
+        // Keep one set of links, including a usable inline fallback without dialog support.
+        navigationHome.append(navigation);
+
+        if (focusInSidebar || focusOnMenu) {
+          links[0]?.focus({ preventScroll: true });
         }
 
         menuButton.hidden = true;
@@ -43,62 +70,56 @@
     }
 
     menuButton.addEventListener('click', () => {
-      setMenuOpen(!menuOpen);
+      if (!mobileViewport.matches || !supportsSidebar) return;
+
+      sidebar.showModal();
+      synchronizeMenuState();
     });
 
-    header.addEventListener('keydown', (event) => {
-      if (event.key !== 'Escape' || !menuOpen) return;
+    if (supportsSidebar) {
+      closeButton.addEventListener('click', () => closeMenu());
+      sidebar.addEventListener('cancel', (event) => {
+        event.preventDefault();
+        closeMenu();
+      });
+      sidebar.addEventListener('close', synchronizeMenuState);
+      sidebar.addEventListener('click', (event) => {
+        if (event.target !== sidebar) return;
 
-      event.preventDefault();
-      setMenuOpen(false, true);
-    });
+        const bounds = sidebar.getBoundingClientRect();
+        const outside =
+          event.clientX < bounds.left ||
+          event.clientX > bounds.right ||
+          event.clientY < bounds.top ||
+          event.clientY > bounds.bottom;
 
-    document.addEventListener('click', (event) => {
-      if (!menuOpen || header.contains(event.target)) return;
-
-      setMenuOpen(false, navigation.contains(document.activeElement));
-    });
-
-    header.addEventListener('focusout', (event) => {
-      if (
-        menuOpen &&
-        event.relatedTarget &&
-        !header.contains(event.relatedTarget)
-      ) {
-        setMenuOpen(false);
-      }
-    });
+        if (outside) closeMenu();
+      });
+    }
 
     navigation.addEventListener('click', (event) => {
       const link = event.target.closest('a[href^="#"]');
 
       if (
         !link ||
-        !menuOpen ||
+        !sidebar?.open ||
         event.defaultPrevented ||
         event.button !== 0 ||
         event.metaKey ||
         event.ctrlKey ||
         event.shiftKey ||
         event.altKey
-      ) {
+      )
         return;
-      }
 
       const target = document.getElementById(link.hash.slice(1));
-
       if (!target) return;
 
-      // Move keyboard focus out of the closing menu.
-      // Native anchor navigation handles scrolling, history, and the URL.
+      // Release the modal before focusing the section; native anchors handle history and scrolling.
+      closeMenu(false);
       const addedTabIndex = !target.hasAttribute('tabindex');
-
-      if (addedTabIndex) {
-        target.setAttribute('tabindex', '-1');
-      }
-
+      if (addedTabIndex) target.setAttribute('tabindex', '-1');
       target.focus({ preventScroll: true });
-
       if (addedTabIndex) {
         target.addEventListener(
           'blur',
@@ -106,21 +127,12 @@
           { once: true },
         );
       }
-
-      setMenuOpen(false);
     });
 
     function updateHeader() {
-      const scrolled = String(window.scrollY > 16);
-
-      if (header.dataset.scrolled !== scrolled) {
-        header.dataset.scrolled = scrolled;
-      }
-
-      // Keep anchored sections clear of the desktop header.
-      const clearance = mobileViewport.matches ? 24 : header.offsetHeight + 24;
-
-      root.style.scrollPaddingBlockStart = `${clearance}px`;
+      header.dataset.scrolled = String(window.scrollY > 16);
+      // The same sticky header clearance applies on desktop and mobile.
+      root.style.scrollPaddingBlockStart = `${header.offsetHeight + 24}px`;
     }
 
     let scrollFrame = null;
