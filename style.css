@@ -347,7 +347,7 @@ input:disabled {
   display: none;
   align-items: center;
   justify-content: center;
-  gap: 0.7rem;
+  min-inline-size: 2.75rem;
   min-block-size: 2.75rem;
   padding: 0.5rem 0.8rem;
   border: 1px solid var(--control-border);
@@ -355,9 +355,18 @@ input:disabled {
   color: inherit;
 }
 .menu-toggle-icon {
+  position: relative;
   inline-size: 1rem;
-  block-size: 0.6rem;
+  block-size: 0.75rem;
   border-block: 1px solid currentColor;
+}
+.menu-toggle-icon::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline: 0;
+  border-block-start: 1px solid currentColor;
+  transform: translateY(-50%);
 }
 
 /* Native modal outside the blurred header; focus stays inside while open. */
