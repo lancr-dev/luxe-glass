@@ -12,6 +12,8 @@ Luxe Glass is a dark, space-inspired landing-page concept that explores a web in
 - Interactive material preview with Nebula, Aurora, and Eclipse environments
 - Adjustable diffusion (0–32 px) and surface opacity (35–95%)
 - CSS orbital artwork and illustrated material and use-case cards
+- Condensation-style scroll reveals, specular pointer glints, and layered parallax
+- Custom range controls, atmospheric scene dissolves, and a reading-progress line
 - Solid-surface mode and browser preference fallbacks
 - Sticky glass navigation and a mobile sidebar with native modal focus handling
 - Locally hosted Space Grotesk typography and Space Mono accents

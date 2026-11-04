@@ -28,15 +28,26 @@
       type="font/woff2"
       crossorigin
     />
+    <script>
+      // Set the motion flag before first paint so revealed content never flashes.
+      document.documentElement.classList.add('js');
+      window.setTimeout(function () {
+        var root = document.documentElement;
+        if (!root.classList.contains('is-reveal-ready')) {
+          root.classList.add('reveal-fallback');
+        }
+      }, 3000);
+    </script>
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
   </head>
   <body>
+    <div class="ambient-light" data-ambient-light aria-hidden="true"></div>
     <a class="skip-link" href="#main-content">Skip to content</a>
 
     <header class="site-header" data-header>
       <div class="container header-container">
-        <div class="header-bar liquid-glass glass-nav">
+        <div class="header-bar liquid-glass glass-nav" data-glint>
           <a
             class="brand"
             href="#home"
@@ -102,6 +113,9 @@
               </li>
             </ul>
           </nav>
+          <span class="scroll-progress" aria-hidden="true"
+            ><i data-scroll-progress></i
+          ></span>
         </div>
       </div>
     </header>
@@ -131,19 +145,19 @@
     <main id="main-content" tabindex="-1">
       <section class="hero section" id="home" aria-labelledby="hero-title">
         <div class="container hero-layout">
-          <div class="hero-content">
-            <p class="edition-tag">
+          <div class="hero-content" data-reveal-group>
+            <p class="edition-tag" data-reveal>
               <span class="status-dot" aria-hidden="true"></span>A NEW DIMENSION
               OF INTERFACE
             </p>
-            <h1 id="hero-title">
+            <h1 id="hero-title" data-reveal>
               Beyond<br />the <span class="gradient-text">surface.</span>
             </h1>
-            <p class="hero-description">
+            <p class="hero-description" data-reveal>
               Less weight. More depth. A liquid-glass design exploration where
               light moves through the interface and every layer has a purpose.
             </p>
-            <div class="hero-actions">
+            <div class="hero-actions" data-reveal>
               <a class="button button-primary" href="#explore"
                 >Enter the playground <span aria-hidden="true">↗</span></a
               >
@@ -151,13 +165,18 @@
                 >Discover the material <span aria-hidden="true">↓</span></a
               >
             </div>
-            <p class="hero-note">
+            <p class="hero-note" data-reveal>
               <span aria-hidden="true"></span>Crafted by Lance. Inspired by
               what’s next.
             </p>
           </div>
-          <figure class="hero-study" aria-labelledby="hero-study-caption">
-            <div class="orbital-scene">
+          <figure
+            class="hero-study"
+            aria-labelledby="hero-study-caption"
+            data-reveal="glass"
+            data-reveal-delay="140"
+          >
+            <div class="orbital-scene" data-tilt-scene>
               <div class="orbital-grid" aria-hidden="true"></div>
               <div class="orbit orbit-one" aria-hidden="true"></div>
               <div class="orbit orbit-two" aria-hidden="true"></div>
@@ -170,7 +189,7 @@
                 aria-hidden="true"
                 >LIGHT HAS A NEW HOME.</span
               >
-              <div class="specimen-card liquid-glass">
+              <div class="specimen-card liquid-glass" data-glint>
                 <div class="specimen-top">
                   <span class="specimen-icon" aria-hidden="true">✧</span
                   ><span class="micro-label">MATERIAL / 001</span
@@ -193,7 +212,7 @@
                   >
                 </div>
               </div>
-              <div class="floating-label liquid-glass">
+              <div class="floating-label liquid-glass" data-glint>
                 <span class="layer-icon" aria-hidden="true">◇</span
                 ><span
                   >Designed for depth<small
@@ -211,6 +230,7 @@
         <div
           class="container material-strip"
           aria-label="Design characteristics"
+          data-reveal
         >
           <span class="strip-label">A DIFFERENT KIND OF DARK</span
           ><span><i aria-hidden="true"></i>Optical depth</span
@@ -224,18 +244,20 @@
 
       <section class="about section" id="about" aria-labelledby="about-title">
         <div class="container">
-          <div class="section-heading about-heading">
-            <p class="eyebrow">01 / THE MATERIAL</p>
-            <h2 id="about-title">Darkness gives light its dimension.</h2>
-            <p class="section-intro">
+          <div class="section-heading about-heading" data-reveal-group>
+            <p class="eyebrow" data-reveal>01 / THE MATERIAL</p>
+            <h2 id="about-title" data-reveal>
+              Darkness gives light its dimension.
+            </h2>
+            <p class="section-intro" data-reveal>
               Liquid Glass brings a sense of light and depth to an interface.
               Translucent controls reveal a softened view of what sits behind
               them, while fine edges and gentle state changes make each
               interaction feel connected.
             </p>
           </div>
-          <dl class="principle-list">
-            <div class="principle-item">
+          <dl class="principle-list" data-reveal-group>
+            <div class="principle-item" data-reveal="glass">
               <dt>
                 <div class="principle-art art-layers" aria-hidden="true">
                   <span></span><span class="liquid-glass"></span
@@ -249,7 +271,7 @@
                 completely blocking the story beneath it.
               </dd>
             </div>
-            <div class="principle-item">
+            <div class="principle-item" data-reveal="glass">
               <dt>
                 <div class="principle-art art-edge" aria-hidden="true">
                   <span class="edge-halo"></span
@@ -263,7 +285,7 @@
                 the content they help you explore.
               </dd>
             </div>
-            <div class="principle-item">
+            <div class="principle-item" data-reveal="glass">
               <dt>
                 <div class="principle-art art-flow" aria-hidden="true">
                   <div class="liquid-glass flow-track">
@@ -280,7 +302,11 @@
               </dd>
             </div>
           </dl>
-          <aside class="design-note" aria-labelledby="design-note-title">
+          <aside
+            class="design-note"
+            aria-labelledby="design-note-title"
+            data-reveal
+          >
             <h3 id="design-note-title">A little glass goes a long way.</h3>
             <p>
               Glass works best in a few useful places. Headlines, detailed
@@ -296,16 +322,16 @@
         aria-labelledby="explore-title"
       >
         <div class="container">
-          <div class="section-heading explore-heading">
-            <p class="eyebrow">02 / THE PLAYGROUND</p>
-            <h2 id="explore-title">Find your atmosphere.</h2>
-            <p class="section-intro">
+          <div class="section-heading explore-heading" data-reveal-group>
+            <p class="eyebrow" data-reveal>02 / THE PLAYGROUND</p>
+            <h2 id="explore-title" data-reveal>Find your atmosphere.</h2>
+            <p class="section-intro" data-reveal>
               Switch the backdrop and adjust the glass. Notice how the same
               control picks up a different mood while its message stays
               readable.
             </p>
           </div>
-          <div class="studio-shell">
+          <div class="studio-shell" data-reveal="glass">
             <div class="studio-topbar">
               <span
                 ><span class="status-dot" aria-hidden="true"></span>Material
@@ -317,6 +343,7 @@
                 <div
                   class="material-scene studio-scene"
                   data-preview
+                  data-tilt-scene
                   data-scene="nebula"
                   data-surface="glass"
                 >
@@ -331,7 +358,10 @@
                       >AN EXPLORATION BEYOND THE ORDINARY</span
                     >
                   </div>
-                  <div class="preview-toolbar liquid-glass glass-control">
+                  <div
+                    class="preview-toolbar liquid-glass glass-control"
+                    data-glint
+                  >
                     <div class="preview-toolbar-copy">
                       <span class="preview-toolbar-label"
                         >Your next dimension</span
@@ -484,22 +514,24 @@
         aria-labelledby="applications-title"
       >
         <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">03 / THE POSSIBILITIES</p>
-            <h2 id="applications-title">Different worlds. The same clarity.</h2>
-            <p class="section-intro">
+          <div class="section-heading" data-reveal-group>
+            <p class="eyebrow" data-reveal>03 / THE POSSIBILITIES</p>
+            <h2 id="applications-title" data-reveal>
+              Different worlds. The same clarity.
+            </h2>
+            <p class="section-intro" data-reveal>
               Start with what your visitors need to see. Add glass where it
               makes exploring that content feel natural.
             </p>
           </div>
-          <div class="application-list">
-            <article class="application-item">
+          <div class="application-list" data-reveal-group>
+            <article class="application-item" data-reveal="glass">
               <div
                 class="application-visual visual-portfolio"
                 aria-hidden="true"
               >
                 <span class="mini-orb"></span>
-                <div class="mini-dock liquid-glass">
+                <div class="mini-dock liquid-glass" data-glint>
                   <span>Selected work</span><span>01 — 03 ↗</span>
                 </div>
               </div>
@@ -516,10 +548,10 @@
                 >
               </div>
             </article>
-            <article class="application-item">
+            <article class="application-item" data-reveal="glass">
               <div class="application-visual visual-product" aria-hidden="true">
                 <span class="product-ring"></span>
-                <div class="mini-dock liquid-glass">
+                <div class="mini-dock liquid-glass" data-glint>
                   <span>Explore the object</span><span>360° ↗</span>
                 </div>
               </div>
@@ -536,10 +568,10 @@
                 >
               </div>
             </article>
-            <article class="application-item">
+            <article class="application-item" data-reveal="glass">
               <div class="application-visual visual-brand" aria-hidden="true">
                 <span class="brand-star">✳</span>
-                <div class="mini-dock liquid-glass">
+                <div class="mini-dock liquid-glass" data-glint>
                   <span>A different perspective</span><span>Discover ↗</span>
                 </div>
               </div>
@@ -557,7 +589,7 @@
               </div>
             </article>
           </div>
-          <p class="application-note">
+          <p class="application-note" data-reveal>
             For text-heavy pages, forms, and dense data, solid surfaces usually
             make the better foundation. A website can combine both treatments.
           </p>
@@ -570,42 +602,44 @@
         aria-labelledby="process-title"
       >
         <div class="container process-layout">
-          <div class="section-heading">
-            <p class="eyebrow">04 / FROM CONCEPT TO REALITY</p>
-            <h2 id="process-title">Your world. A new perspective.</h2>
-            <p class="section-intro">
+          <div class="section-heading" data-reveal-group>
+            <p class="eyebrow" data-reveal>04 / FROM CONCEPT TO REALITY</p>
+            <h2 id="process-title" data-reveal>
+              Your world. A new perspective.
+            </h2>
+            <p class="section-intro" data-reveal>
               I'm Lance, a freelance web developer. This showcase is a starting
               point for a conversation about your website. The final design
               should fit your content, your audience, and the way your business
               works.
             </p>
-            <a class="text-link" href="#start"
+            <a class="text-link" href="#start" data-reveal
               >Prepare your project brief <span aria-hidden="true">↗</span></a
             >
           </div>
-          <ol class="process-list">
-            <li>
+          <ol class="process-list" data-reveal-group>
+            <li data-reveal>
               <h3>Define the purpose</h3>
               <p>
                 Outline your audience, key pages, and the action you want
                 visitors to take.
               </p>
             </li>
-            <li>
+            <li data-reveal>
               <h3>Shape the visual direction</h3>
               <p>
                 Use your branding and content to decide the palette, layout, and
                 places where glass adds value.
               </p>
             </li>
-            <li>
+            <li data-reveal>
               <h3>Build around real use</h3>
               <p>
                 Develop the layout for desktop and mobile, with clear navigation
                 and accessible controls.
               </p>
             </li>
-            <li>
+            <li data-reveal>
               <h3>Refine before launch</h3>
               <p>
                 Review readability, keyboard access, motion preferences, and
@@ -618,12 +652,12 @@
 
       <section class="faq section" id="faq" aria-labelledby="faq-title">
         <div class="container faq-layout">
-          <div class="section-heading">
-            <p class="eyebrow">05 / A CLOSER LOOK</p>
-            <h2 id="faq-title">A little more transparency.</h2>
+          <div class="section-heading" data-reveal-group>
+            <p class="eyebrow" data-reveal>05 / A CLOSER LOOK</p>
+            <h2 id="faq-title" data-reveal>A little more transparency.</h2>
           </div>
-          <div class="faq-list">
-            <details class="faq-item">
+          <div class="faq-list" data-reveal-group>
+            <details class="faq-item" data-reveal>
               <summary>Is Liquid Glass the same as glassmorphism?</summary>
               <div class="faq-answer">
                 <p>
@@ -634,7 +668,7 @@
                 </p>
               </div>
             </details>
-            <details class="faq-item">
+            <details class="faq-item" data-reveal>
               <summary>Will the design work on mobile?</summary>
               <div class="faq-answer">
                 <p>
@@ -645,7 +679,7 @@
                 </p>
               </div>
             </details>
-            <details class="faq-item">
+            <details class="faq-item" data-reveal>
               <summary>
                 Does every part of the website need to be glass?
               </summary>
@@ -657,7 +691,7 @@
                 </p>
               </div>
             </details>
-            <details class="faq-item">
+            <details class="faq-item" data-reveal>
               <summary>Can it match my brand colors?</summary>
               <div class="faq-answer">
                 <p>
@@ -667,7 +701,7 @@
                 </p>
               </div>
             </details>
-            <details class="faq-item">
+            <details class="faq-item" data-reveal>
               <summary>What happens when blur is unavailable?</summary>
               <div class="faq-answer">
                 <p>
@@ -677,7 +711,7 @@
                 </p>
               </div>
             </details>
-            <details class="faq-item">
+            <details class="faq-item" data-reveal>
               <summary>Will it look exactly like native Liquid Glass?</summary>
               <div class="faq-answer">
                 <p>
@@ -693,24 +727,28 @@
 
       <section class="start section" id="start" aria-labelledby="start-title">
         <div class="container start-layout">
-          <div class="start-content">
-            <p class="eyebrow">06 / NEXT CHAPTER</p>
-            <h2 id="start-title">
+          <div class="start-content" data-reveal-group>
+            <p class="eyebrow" data-reveal>06 / NEXT CHAPTER</p>
+            <h2 id="start-title" data-reveal>
               Let’s create something
               <span class="gradient-text">with depth.</span>
             </h2>
-            <p class="section-intro">
+            <p class="section-intro" data-reveal>
               Tell me what you're building and what you liked about this
               direction. Use the brief as a starting point, then send it to me
               through the channel where we're already talking.
             </p>
-            <ul class="brief-prompts">
+            <ul class="brief-prompts" data-reveal>
               <li>What does your business or project do?</li>
               <li>What should visitors be able to find or do?</li>
               <li>Which parts of this design feel right for your brand?</li>
             </ul>
           </div>
-          <div class="project-brief">
+          <div
+            class="project-brief"
+            data-reveal="glass"
+            data-reveal-delay="120"
+          >
             <label class="brief-label" for="project-brief"
               >Your next beginning</label
             >
@@ -754,16 +792,16 @@ My budget range:</textarea
     </main>
 
     <footer class="site-footer">
-      <div class="container footer-layout">
-        <a class="footer-brand" href="#home"
+      <div class="container footer-layout" data-reveal-group>
+        <a class="footer-brand" href="#home" data-reveal
           >luxe<span>glass</span><small>BY LANCE DUCANTE</small></a
         >
-        <p>A study in light. A different kind of depth.</p>
-        <nav class="footer-nav" aria-label="Footer navigation">
+        <p data-reveal>A study in light. A different kind of depth.</p>
+        <nav class="footer-nav" aria-label="Footer navigation" data-reveal>
           <a href="#faq">Questions</a
           ><a href="#home">Back to orbit <span aria-hidden="true">↑</span></a>
         </nav>
-        <small class="footer-credit"
+        <small class="footer-credit" data-reveal
           >An independent web design showcase. &copy; 2026 Lance Ducante</small
         >
       </div>

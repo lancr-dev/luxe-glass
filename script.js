@@ -353,6 +353,15 @@
       blur.setAttribute('aria-valuetext', `${blurValue} pixels`);
       opacity.setAttribute('aria-valuetext', `${opacityValue} percent`);
 
+      blur.style.setProperty(
+        '--range-progress',
+        `${((blurValue / 32) * 100).toFixed(1)}%`,
+      );
+      opacity.style.setProperty(
+        '--range-progress',
+        `${(((opacityValue - 35) / 60) * 100).toFixed(1)}%`,
+      );
+
       blur.disabled = previewSolid;
       opacity.disabled = previewSolid;
       comparison.disabled = globalSolid;
@@ -496,8 +505,225 @@
     button.hidden = false;
   }
 
+  function initializeMotion() {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const revealItems = [...document.querySelectorAll('[data-reveal]')];
+
+    // Stagger elements inside a group, but leave manual delays alone.
+    document.querySelectorAll('[data-reveal-group]').forEach((group) => {
+      const items = [...group.querySelectorAll('[data-reveal]')];
+
+      items.forEach((item, index) => {
+        if (item.hasAttribute('data-reveal-delay')) return;
+
+        item.style.setProperty(
+          '--reveal-delay',
+          `${Math.min(index, 8) * 70}ms`,
+        );
+      });
+    });
+
+    document.querySelectorAll('[data-reveal-delay]').forEach((item) => {
+      const delay = Number.parseInt(item.dataset.revealDelay, 10);
+
+      if (Number.isFinite(delay)) {
+        item.style.setProperty('--reveal-delay', `${delay}ms`);
+      }
+    });
+
+    root.classList.add('is-reveal-ready');
+
+    function revealAll() {
+      revealItems.forEach((item) => item.classList.add('is-revealed'));
+    }
+
+    let revealObserver = null;
+
+    if (!('IntersectionObserver' in window) || reduceMotion.matches) {
+      revealAll();
+    } else {
+      revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            entry.target.classList.add('is-revealed');
+            revealObserver.unobserve(entry.target);
+          });
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+      );
+
+      revealItems.forEach((item) => revealObserver.observe(item));
+    }
+
+    // Reading progress and a very light parallax on the orbital study.
+    const progress = document.querySelector('[data-scroll-progress]');
+    const heroScene = document.querySelector('.orbital-scene');
+    let scrollFrame = null;
+
+    function renderScroll() {
+      scrollFrame = null;
+
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const value =
+        maxScroll > 0
+          ? Math.min(1, Math.max(0, window.scrollY / maxScroll))
+          : 0;
+
+      if (progress) {
+        progress.style.transform = `scaleX(${value.toFixed(3)})`;
+      }
+
+      // Never leave a reveal waiting below the last scrollable pixel.
+      if (value >= 0.9999) {
+        revealAll();
+      }
+
+      if (heroScene && !reduceMotion.matches) {
+        const drift = Math.min(36, Math.max(0, window.scrollY) * 0.045);
+        heroScene.style.setProperty('--hero-drift', drift.toFixed(2));
+      }
+    }
+
+    function requestScrollRender() {
+      if (scrollFrame !== null) return;
+      scrollFrame = window.requestAnimationFrame(renderScroll);
+    }
+
+    renderScroll();
+    window.addEventListener('scroll', requestScrollRender, { passive: true });
+    window.addEventListener('resize', requestScrollRender);
+
+    // Specular highlight that follows the pointer across glass.
+    document.querySelectorAll('[data-glint]').forEach((element) => {
+      element.addEventListener(
+        'pointermove',
+        (event) => {
+          if (!finePointer.matches || reduceMotion.matches) return;
+
+          const bounds = element.getBoundingClientRect();
+
+          if (!bounds.width || !bounds.height) return;
+
+          const x = ((event.clientX - bounds.left) / bounds.width) * 100;
+          const y = ((event.clientY - bounds.top) / bounds.height) * 100;
+
+          element.style.setProperty('--glint-x', `${x.toFixed(2)}%`);
+          element.style.setProperty('--glint-y', `${y.toFixed(2)}%`);
+        },
+        { passive: true },
+      );
+    });
+
+    // Independent layer drift inside the hero and studio scenes.
+    document.querySelectorAll('[data-tilt-scene]').forEach((scene) => {
+      let frame = null;
+      let pointerX = 0;
+      let pointerY = 0;
+
+      function resetScene() {
+        if (frame !== null) {
+          window.cancelAnimationFrame(frame);
+          frame = null;
+        }
+
+        scene.style.setProperty('--scene-x', '0');
+        scene.style.setProperty('--scene-y', '0');
+      }
+
+      scene.addEventListener(
+        'pointermove',
+        (event) => {
+          if (!finePointer.matches || reduceMotion.matches) return;
+
+          pointerX = event.clientX;
+          pointerY = event.clientY;
+
+          if (frame !== null) return;
+
+          frame = window.requestAnimationFrame(() => {
+            frame = null;
+            const bounds = scene.getBoundingClientRect();
+
+            if (!bounds.width || !bounds.height) return;
+
+            scene.style.setProperty(
+              '--scene-x',
+              ((pointerX - bounds.left) / bounds.width - 0.5).toFixed(3),
+            );
+            scene.style.setProperty(
+              '--scene-y',
+              ((pointerY - bounds.top) / bounds.height - 0.5).toFixed(3),
+            );
+          });
+        },
+        { passive: true },
+      );
+
+      scene.addEventListener('pointerleave', resetScene);
+      scene.addEventListener('pointercancel', resetScene);
+    });
+
+    // A low, slow ambient light that follows the pointer.
+    const ambient = document.querySelector('[data-ambient-light]');
+
+    if (ambient) {
+      let targetX = window.innerWidth * 0.74;
+      let targetY = window.innerHeight * 0.12;
+      let lightX = targetX;
+      let lightY = targetY;
+      let lightFrame = null;
+
+      function moveLight() {
+        lightFrame = null;
+
+        if (reduceMotion.matches) return;
+
+        lightX += (targetX - lightX) * 0.12;
+        lightY += (targetY - lightY) * 0.12;
+
+        ambient.style.setProperty('--ambient-x', `${lightX.toFixed(1)}px`);
+        ambient.style.setProperty('--ambient-y', `${lightY.toFixed(1)}px`);
+
+        if (Math.abs(targetX - lightX) + Math.abs(targetY - lightY) > 0.5) {
+          lightFrame = window.requestAnimationFrame(moveLight);
+        }
+      }
+
+      ambient.style.setProperty('--ambient-x', `${lightX}px`);
+      ambient.style.setProperty('--ambient-y', `${lightY}px`);
+
+      window.addEventListener(
+        'pointermove',
+        (event) => {
+          if (!finePointer.matches || reduceMotion.matches) return;
+
+          targetX = event.clientX;
+          targetY = event.clientY;
+
+          if (lightFrame === null) {
+            lightFrame = window.requestAnimationFrame(moveLight);
+          }
+        },
+        { passive: true },
+      );
+    }
+
+    reduceMotion.addEventListener('change', (event) => {
+      if (!event.matches) return;
+
+      revealObserver?.disconnect();
+      revealAll();
+      heroScene?.style.setProperty('--hero-drift', '0');
+    });
+  }
+
   // Apply surface preferences before initializing the remaining interactions.
   initializeMaterialStudio();
   initializeNavigation();
   initializeBriefCopy();
+  initializeMotion();
 })();

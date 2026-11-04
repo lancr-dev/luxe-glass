@@ -14,6 +14,23 @@
   src: url('assets/fonts/space-mono-latin-400.woff2') format('woff2');
 }
 
+/* Register the scene colours so the studio atmosphere can dissolve between moods. */
+@property --scene-glow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #6262ad;
+}
+@property --scene-light {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #a4baff;
+}
+@property --scene-dark {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #14192f;
+}
+
 /* Deep Space Edition: shared tokens and one glass material. */
 :root {
   color-scheme: dark;
@@ -37,6 +54,8 @@
   --gutter: clamp(1.15rem, 4vw, 4rem);
   --section-space: clamp(4.5rem, 8vw, 7.5rem);
   --duration: 200ms;
+  --ease-liquid: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-glide: cubic-bezier(0.65, 0, 0.35, 1);
   --sans: 'Space Grotesk', 'Segoe UI', sans-serif;
   --mono: 'Space Mono', Consolas, monospace;
 }
@@ -65,6 +84,53 @@ body {
   font-size: 1rem;
   line-height: 1.7;
   overflow-wrap: break-word;
+}
+/* A soft light source drifts behind the content. It never intercepts input. */
+.ambient-light {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ambient-light::before {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 56rem;
+  block-size: 56rem;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgb(132 156 255 / 0.13),
+    rgb(132 156 255 / 0.05) 32%,
+    transparent 68%
+  );
+  content: '';
+  filter: blur(34px);
+  transform: translate3d(
+    calc(var(--ambient-x, 74vw) - 28rem),
+    calc(var(--ambient-y, 8vh) - 28rem),
+    0
+  );
+  will-change: transform;
+}
+main,
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+/* Fine grain keeps the large gradients from banding and adds a physical tooth. */
+body::after {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  content: '';
+  opacity: 0.026;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
 }
 [hidden] {
   display: none !important;
@@ -243,6 +309,22 @@ input:disabled {
   content: '';
   pointer-events: none;
 }
+/* A specular pool of light follows the pointer across interactive glass. */
+.liquid-glass::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    15rem circle at var(--glint-x, 50%) var(--glint-y, 0%),
+    rgb(216 229 255 / 0.17),
+    transparent 62%
+  );
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 420ms var(--ease-liquid);
+}
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   .liquid-glass {
     background: rgb(var(--glass-rgb) / var(--glass-opacity));
@@ -259,6 +341,7 @@ input:disabled {
   pointer-events: none;
 }
 .header-bar {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -266,6 +349,26 @@ input:disabled {
   padding: 0.7rem 0.9rem 0.7rem 1.15rem;
   pointer-events: auto;
   border-radius: 1rem;
+}
+/* A thin meniscus line tracks reading progress along the glass edge. */
+.scroll-progress {
+  position: absolute;
+  inset-inline: 1.15rem 0.9rem;
+  inset-block-end: 0.3rem;
+  block-size: 1px;
+  border-radius: 99px;
+  background: rgb(192 207 255 / 0.09);
+  overflow: hidden;
+  pointer-events: none;
+}
+.scroll-progress i {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  background: linear-gradient(90deg, #718bff, #dfe8ff);
+  box-shadow: 0 0 8px #a9c0ff;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
 }
 .glass-nav {
   --glass-opacity: 0.72;
@@ -288,6 +391,12 @@ input:disabled {
   block-size: 2.5rem;
   border: 1px solid #96a9ee35;
   border-radius: 0.75rem;
+  transition:
+    transform 500ms var(--ease-liquid),
+    box-shadow 500ms var(--ease-liquid);
+}
+.brand-text > span {
+  transition: color 300ms var(--ease-liquid);
 }
 .brand-text {
   font-size: 1.3rem;
@@ -319,6 +428,7 @@ input:disabled {
   list-style: none;
 }
 .nav-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -336,6 +446,30 @@ input:disabled {
 .nav-link[aria-current='location'] {
   color: white;
   background: #9bb1ff12;
+}
+.nav-link:not(.nav-link-cta)::after {
+  position: absolute;
+  inset-inline: 0.85rem;
+  inset-block-end: 0.28rem;
+  block-size: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #c8d7ff 30%,
+    #a9b9ff 70%,
+    transparent
+  );
+  content: '';
+  opacity: 0;
+  transform: scaleX(0.5);
+  transition:
+    opacity 260ms var(--ease-liquid),
+    transform 420ms var(--ease-liquid);
+}
+.nav-link:not(.nav-link-cta):hover::after,
+.nav-link[aria-current='location']:not(.nav-link-cta)::after {
+  opacity: 0.9;
+  transform: scaleX(1);
 }
 .nav-link-cta {
   margin-inline-start: 0.75rem;
@@ -466,6 +600,8 @@ input:disabled {
   }
 }
 .button {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -480,10 +616,29 @@ input:disabled {
   line-height: 1.4;
   text-align: center;
   text-decoration: none;
+  overflow: hidden;
   transition:
     background-color var(--duration),
+    border-color var(--duration),
+    color var(--duration),
     box-shadow var(--duration),
     transform var(--duration);
+}
+/* A single pass of reflected light, not a looping shine. */
+.button::before {
+  position: absolute;
+  z-index: -1;
+  inset: -30% -70%;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgb(255 255 255 / 0.32) 50%,
+    transparent 62%
+  );
+  content: '';
+  pointer-events: none;
+  translate: -70% 0;
+  transition: translate 760ms var(--ease-glide);
 }
 .button-primary {
   background: var(--accent);
@@ -1513,6 +1668,7 @@ textarea {
   font-weight: 650;
   letter-spacing: -0.06em;
   text-decoration: none;
+  transition: color 300ms var(--ease-liquid);
 }
 .footer-brand small {
   flex-basis: 100%;
@@ -1546,6 +1702,514 @@ textarea {
   color: var(--text-secondary);
   font-family: var(--mono);
   font-size: 0.6rem;
+}
+
+/* ── Optical motion ─────────────────────────────────────────────── */
+/* Content condenses into view, highlights track the pointer, and the
+   orbital artwork drifts a little slower than the page. */
+
+.js [data-reveal] {
+  opacity: 0;
+  translate: 0 1.6rem;
+  filter: blur(7px);
+  transition:
+    opacity 700ms var(--ease-liquid) var(--reveal-delay, 0ms),
+    translate 900ms var(--ease-liquid) var(--reveal-delay, 0ms),
+    scale 900ms var(--ease-liquid) var(--reveal-delay, 0ms),
+    filter 900ms var(--ease-liquid) var(--reveal-delay, 0ms);
+}
+.js [data-reveal='glass'] {
+  translate: 0 2.25rem;
+  scale: 0.98;
+  filter: blur(10px);
+}
+.js [data-reveal].is-revealed,
+.js.reveal-fallback [data-reveal] {
+  opacity: 1;
+  translate: none;
+  scale: 1;
+  filter: none;
+}
+@media (max-width: 48rem) {
+  .js [data-reveal] {
+    filter: blur(4px);
+  }
+  .js [data-reveal='glass'] {
+    filter: blur(7px);
+  }
+}
+
+/* Slow ambient life in the hero artwork. */
+@keyframes orb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+@keyframes orbit-drift {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -9px;
+  }
+}
+@keyframes status-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 9px #95baff80;
+  }
+  50% {
+    box-shadow: 0 0 16px #bcd2ff;
+  }
+}
+@keyframes gradient-drift {
+  to {
+    background-position: 100% 50%;
+  }
+}
+@keyframes planet-drift {
+  to {
+    transform: translate3d(-10px, 9px, 0);
+  }
+}
+@keyframes answer-in {
+  from {
+    opacity: 0;
+    translate: 0 -0.4rem;
+    filter: blur(4px);
+  }
+}
+
+.glass-orb {
+  animation: orb-float 16s ease-in-out infinite;
+}
+.orbit-one {
+  animation: orbit-drift 20s ease-in-out infinite alternate;
+}
+.orbit-two {
+  animation: orbit-drift 27s ease-in-out infinite alternate-reverse;
+}
+.status-dot {
+  animation: status-pulse 3.8s ease-in-out infinite;
+}
+.studio-planet {
+  animation: planet-drift 24s ease-in-out infinite alternate;
+}
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .gradient-text {
+    background-size: 220% 100%;
+    animation: gradient-drift 11s ease-in-out infinite alternate;
+  }
+}
+
+/* Scroll-linked depth. The scene keeps its own pace as the page moves. */
+.orbital-scene {
+  translate: 0 calc(var(--hero-drift, 0) * 1px);
+}
+.glass-orb,
+.specimen-card,
+.floating-label,
+.studio-planet,
+.scene-editorial {
+  transition:
+    translate 650ms var(--ease-liquid),
+    transform 650ms var(--ease-liquid),
+    border-color 400ms,
+    box-shadow 650ms;
+}
+/* Pointer parallax is applied one layer at a time. */
+.orbital-scene .glass-orb {
+  translate: calc(var(--scene-x, 0) * 16px)
+    calc(var(--scene-y, 0) * 12px);
+}
+.orbital-scene .specimen-card {
+  translate: calc(var(--scene-x, 0) * -8px)
+    calc(var(--scene-y, 0) * -6px);
+}
+.orbital-scene .floating-label {
+  translate: calc(var(--scene-x, 0) * 12px)
+    calc(var(--scene-y, 0) * 8px);
+}
+.studio-planet {
+  translate: calc(var(--scene-x, 0) * -13px)
+    calc(var(--scene-y, 0) * -9px);
+}
+.scene-editorial {
+  translate: calc(var(--scene-x, 0) * 5px)
+    calc(var(--scene-y, 0) * 4px);
+}
+
+/* Hover feedback: each object reacts in the language of its material. */
+.specimen-card,
+.floating-label {
+  transition:
+    translate 650ms var(--ease-liquid),
+    transform 650ms var(--ease-liquid),
+    border-color 400ms,
+    box-shadow 650ms;
+}
+.principle-item {
+  transition:
+    transform 550ms var(--ease-liquid),
+    border-color 400ms,
+    box-shadow 550ms,
+    background-color 400ms;
+}
+.art-layers > span {
+  transition:
+    translate 650ms var(--ease-liquid),
+    rotate 650ms var(--ease-liquid),
+    box-shadow 650ms;
+}
+.art-edge > .liquid-glass {
+  transition:
+    transform 700ms var(--ease-liquid),
+    box-shadow 700ms;
+}
+.edge-halo {
+  opacity: 0.8;
+  transition:
+    transform 700ms var(--ease-liquid),
+    opacity 700ms;
+}
+.flow-track {
+  transition: transform 650ms var(--ease-liquid);
+}
+.flow-track > span {
+  transition:
+    translate 650ms var(--ease-liquid),
+    box-shadow 650ms;
+}
+.flow-track i {
+  transition: opacity 500ms var(--ease-liquid);
+}
+.flow-orbit {
+  transition:
+    transform 900ms var(--ease-liquid),
+    border-color 650ms;
+}
+.application-item {
+  transition:
+    transform 550ms var(--ease-liquid),
+    border-color 400ms,
+    box-shadow 550ms,
+    background-color 400ms;
+}
+.mini-orb {
+  transition:
+    scale 750ms var(--ease-liquid),
+    rotate 750ms var(--ease-liquid),
+    box-shadow 750ms;
+}
+.product-ring {
+  transition:
+    transform 700ms var(--ease-liquid),
+    box-shadow 700ms;
+}
+.brand-star {
+  transition:
+    rotate 800ms var(--ease-liquid),
+    scale 800ms var(--ease-liquid),
+    text-shadow 700ms;
+}
+.mini-dock {
+  transition:
+    translate 500ms var(--ease-liquid),
+    border-color 400ms,
+    box-shadow 500ms;
+}
+.application-detail span,
+.text-link span,
+.footer-nav span {
+  display: inline-block;
+  transition: translate 350ms var(--ease-liquid);
+}
+.specimen-bottom a {
+  transition:
+    background-color 300ms,
+    translate 350ms var(--ease-liquid);
+}
+.scene-option,
+.scene-swatch {
+  transition:
+    background-color 300ms,
+    border-color 300ms,
+    box-shadow 300ms,
+    scale 300ms var(--ease-liquid);
+}
+
+/* Animated range track keeps the material controls feeling responsive. */
+input[type='range'] {
+  --range-progress: 50%;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  block-size: 4px;
+  border-radius: 99px;
+  background: linear-gradient(
+    90deg,
+    #aebfff 0 var(--range-progress),
+    #2a3147 var(--range-progress) 100%
+  );
+  box-shadow: inset 0 1px 2px #00000080;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  margin-block-start: -0.4rem;
+  border: 1px solid #dbe4ff;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #f5f8ff,
+    #bcccf7 55%,
+    #7d90d4
+  );
+  box-shadow:
+    0 0 0 4px #aebfff12,
+    0 0 16px #9db4ff66;
+  cursor: grab;
+  transition:
+    scale 220ms var(--ease-liquid),
+    box-shadow 220ms;
+}
+input[type='range']:active::-webkit-slider-thumb {
+  scale: 1.18;
+  cursor: grabbing;
+}
+input[type='range']::-moz-range-track {
+  block-size: 4px;
+  border-radius: 99px;
+  background: #2a3147;
+  box-shadow: inset 0 1px 2px #00000080;
+}
+input[type='range']::-moz-range-progress {
+  block-size: 4px;
+  border-radius: 99px;
+  background: #aebfff;
+  box-shadow: 0 0 12px #9db4ff66;
+}
+input[type='range']::-moz-range-thumb {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  border: 1px solid #dbe4ff;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #f5f8ff,
+    #bcccf7 55%,
+    #7d90d4
+  );
+  box-shadow:
+    0 0 0 4px #aebfff12,
+    0 0 16px #9db4ff66;
+  cursor: grab;
+  transition:
+    scale 220ms var(--ease-liquid),
+    box-shadow 220ms;
+}
+input[type='range']:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+input[type='range']:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}
+
+/* FAQ: a quiet plus/minus and an answer that condenses into place. */
+.faq-item summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+  transition:
+    color 250ms var(--ease-liquid),
+    padding-inline-start 350ms var(--ease-liquid);
+}
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.faq-item summary::after {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  margin-block-start: -0.05rem;
+  border: 1px solid #39435e;
+  border-radius: 50%;
+  color: var(--accent);
+  content: '+';
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1;
+  transition:
+    rotate 380ms var(--ease-liquid),
+    background-color 280ms,
+    border-color 280ms,
+    color 280ms;
+}
+.faq-item[open] summary::after {
+  rotate: 45deg;
+  border-color: #7486b3;
+  background: #9bb1ff16;
+}
+.faq-item[open] .faq-answer {
+  animation: answer-in 420ms var(--ease-liquid);
+}
+
+/* A single light pass across primary actions. */
+@media (hover: hover) and (pointer: fine) {
+  .button:hover::before {
+    translate: 70% 0;
+  }
+  .liquid-glass[data-glint]:hover::after {
+    opacity: 1;
+  }
+  .specimen-card:hover {
+    border-color: rgb(212 223 255 / 0.4);
+    transform: rotate(-4deg) translateY(-5px);
+    box-shadow:
+      inset 0 1px 1px #eef4ff66,
+      0 34px 80px #0000006b;
+  }
+  .floating-label:hover {
+    transform: rotate(2deg) translateY(-3px);
+  }
+  .principle-item:hover {
+    transform: translateY(-5px);
+    border-color: #3e4968;
+    box-shadow: 0 24px 60px #00000045;
+  }
+  .principle-item:hover .art-layers > span:first-child {
+    translate: -10px -8px;
+    rotate: -4deg;
+  }
+  .principle-item:hover .art-layers > span:nth-child(2) {
+    translate: -4px -3px;
+  }
+  .principle-item:hover .art-layers > span:nth-child(3) {
+    translate: 5px 5px;
+  }
+  .principle-item:hover .art-edge > .liquid-glass {
+    transform: rotate(-22deg) scale(1.06);
+    box-shadow:
+      inset 1px 1px 12px #c7d6ff1f,
+      -5px -5px 24px #839deb30;
+  }
+  .principle-item:hover .edge-halo {
+    opacity: 1;
+    transform: scale(1.22);
+  }
+  .principle-item:hover .flow-track {
+    transform: rotate(-8deg);
+  }
+  .principle-item:hover .flow-track > span {
+    translate: 6px 0;
+    box-shadow: 0 0 24px #a0acff35;
+  }
+  .principle-item:hover .flow-track i {
+    opacity: 0.55;
+  }
+  .principle-item:hover .flow-orbit {
+    transform: rotate(22deg);
+    border-color: #8a9dd04d;
+  }
+  .application-item:hover {
+    transform: translateY(-6px);
+    border-color: #3b4768;
+    box-shadow: 0 26px 70px #00000045;
+  }
+  .application-item:hover .mini-orb {
+    scale: 1.05;
+    rotate: 6deg;
+    box-shadow: 0 0 52px #7cafcc35;
+  }
+  .application-item:hover .product-ring {
+    transform: rotate(-22deg) scaleY(0.8) scale(1.03);
+    box-shadow:
+      inset 4px 5px 8px #161027,
+      inset -3px -5px 7px #ccc6ff,
+      4px 12px 24px #080810,
+      -3px -3px 0 #b7aedf;
+  }
+  .application-item:hover .brand-star {
+    rotate: 8deg;
+    scale: 1.05;
+    text-shadow: 0 0 56px #91d9ff66;
+  }
+  .application-item:hover .mini-dock {
+    translate: 0 -4px;
+    border-color: rgb(192 207 255 / 0.38);
+  }
+  .application-item:hover .application-detail span {
+    translate: 3px 0;
+  }
+  .text-link:hover span,
+  .footer-nav a:hover span {
+    translate: 3px 0;
+  }
+  .specimen-bottom a:hover {
+    translate: 2px -2px;
+  }
+  .scene-option:hover .scene-swatch {
+    scale: 1.04;
+  }
+  .scene-option:has(input:checked):hover .scene-swatch {
+    scale: 1.06;
+  }
+  .faq-item summary:hover {
+    padding-inline-start: 0.35rem;
+  }
+  .faq-item summary:hover::after {
+    border-color: var(--accent);
+    background: #9bb1ff16;
+  }
+  .nav-link-cta:hover {
+    box-shadow: 0 0 22px #9eb3ff1a;
+  }
+  .brand:hover .brand-symbol {
+    transform: rotate(-5deg) scale(1.04);
+    box-shadow: 0 0 22px #8ba3ff2e;
+  }
+  .brand:hover .brand-text > span,
+  .footer-brand:hover,
+  .footer-brand:hover > span {
+    color: #d5ddff;
+  }
+  .sidebar-close:hover {
+    background: #b2c4ff12;
+    color: #fff;
+  }
+  textarea:hover {
+    border-color: #7486b3;
+  }
+}
+input[type='range']:hover::-webkit-slider-thumb {
+  scale: 1.12;
+  box-shadow:
+    0 0 0 5px #aebfff1c,
+    0 0 20px #a9bdff99;
+}
+
+/* The studio atmosphere dissolves between environments. */
+.material-scene {
+  transition:
+    --scene-glow 700ms ease,
+    --scene-light 700ms ease,
+    --scene-dark 700ms ease;
+}
+.scene-option:has(input:checked) .scene-swatch {
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.28),
+    0 0 18px rgb(166 186 255 / 0.18);
 }
 
 /* Subtle feedback, without perpetual animation. */
@@ -1878,7 +2542,9 @@ html[data-transparency='solid'] .liquid-glass,
   backdrop-filter: none;
 }
 html[data-transparency='solid'] .liquid-glass::before,
-[data-preview][data-surface='solid'] .liquid-glass::before {
+html[data-transparency='solid'] .liquid-glass::after,
+[data-preview][data-surface='solid'] .liquid-glass::before,
+[data-preview][data-surface='solid'] .liquid-glass::after {
   display: none;
 }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
@@ -1887,7 +2553,8 @@ html[data-transparency='solid'] .liquid-glass::before,
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
-  .liquid-glass::before {
+  .liquid-glass::before,
+  .liquid-glass::after {
     display: none;
   }
   .mobile-sidebar::backdrop {
@@ -1912,6 +2579,10 @@ html[data-transparency='solid'] .liquid-glass::before,
   .item-number {
     color: #d4def5;
   }
+  .ambient-light,
+  body::after {
+    display: none;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -1922,6 +2593,82 @@ html[data-transparency='solid'] .liquid-glass::before,
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+  .js [data-reveal],
+  .js [data-reveal='glass'] {
+    opacity: 1;
+    translate: none;
+    scale: 1;
+    filter: none;
+  }
+  .orbital-scene,
+  .glass-orb,
+  .specimen-card,
+  .floating-label,
+  .studio-planet,
+  .scene-editorial {
+    translate: none;
+  }
+  .ambient-light,
+  .button::before,
+  .liquid-glass[data-glint]::after {
+    display: none;
+  }
+  .specimen-card:hover {
+    transform: rotate(-6deg);
+  }
+  .floating-label:hover {
+    transform: rotate(4deg);
+  }
+  .principle-item:hover,
+  .application-item:hover {
+    transform: none;
+  }
+  .application-item:hover .mini-orb,
+  .application-item:hover .brand-star {
+    scale: none;
+    rotate: none;
+  }
+  .application-item:hover .product-ring {
+    transform: rotate(-30deg) scaleY(0.75);
+  }
+  .application-item:hover .mini-dock,
+  .application-item:hover .application-detail span,
+  .principle-item:hover .art-layers > span,
+  .principle-item:hover .flow-track > span,
+  .text-link:hover span,
+  .footer-nav a:hover span,
+  .specimen-bottom a:hover {
+    translate: none;
+  }
+  .principle-item:hover .art-layers > span:first-child {
+    rotate: none;
+  }
+  .principle-item:hover .art-edge > .liquid-glass {
+    transform: rotate(-15deg);
+  }
+  .principle-item:hover .edge-halo {
+    opacity: 0.8;
+    transform: none;
+  }
+  .principle-item:hover .flow-track {
+    transform: rotate(-12deg);
+  }
+  .principle-item:hover .flow-track i {
+    opacity: 1;
+  }
+  .principle-item:hover .flow-orbit {
+    transform: none;
+  }
+  .scene-option:hover .scene-swatch,
+  .scene-option:has(input:checked):hover .scene-swatch {
+    scale: none;
+  }
+  .faq-item summary:hover {
+    padding-inline-start: 0;
+  }
+  .brand:hover .brand-symbol {
+    transform: none;
   }
   .button:hover,
   .button:active:not(:disabled),
@@ -1958,11 +2705,15 @@ html[data-transparency='solid'] .liquid-glass::before,
     color: CanvasText;
   }
   .liquid-glass::before,
+  .liquid-glass::after,
+  .button::before,
   .scene-swatch,
   .glass-orb,
   .studio-planet,
   .orbital-grid,
-  .orbit {
+  .orbit,
+  .ambient-light,
+  body::after {
     display: none;
   }
   .scene-option:has(input:checked),
@@ -1998,8 +2749,18 @@ html[data-transparency='solid'] .liquid-glass::before,
   .footer-nav,
   .hero-study,
   .principle-art,
-  .application-visual {
+  .application-visual,
+  .ambient-light,
+  body::after,
+  .scroll-progress {
     display: none;
+  }
+  .js [data-reveal],
+  .js [data-reveal='glass'] {
+    opacity: 1 !important;
+    translate: none !important;
+    scale: 1 !important;
+    filter: none !important;
   }
   .container {
     inline-size: 100%;
