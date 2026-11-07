@@ -338,7 +338,7 @@
       preview.dataset.surface = previewSolid ? 'solid' : 'glass';
 
       if (sceneLabel) {
-        sceneLabel.textContent = sceneNames.get(scene).toUpperCase();
+        sceneLabel.textContent = sceneNames.get(scene);
       }
 
       preview.style.setProperty('--preview-blur', `${blurValue}px`);

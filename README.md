@@ -5,7 +5,7 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge&logo=javascript&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-black?style=for-the-badge&logo=vercel&logoColor=white)
 
-Luxe Glass is a dark, space-inspired landing-page concept that explores a web interpretation of liquid-glass design. An orbital hero, luminous edges, and layered translucent panels sit against a near-black canvas with ice-blue and violet accents. The illustrations are built with CSS. Space Grotesk and Space Mono are hosted locally, with no external media or font requests.
+Luxe Glass is a dark, space-inspired landing-page concept that explores a web interpretation of liquid-glass design. An orbital hero, luminous edges, and layered translucent panels sit against a near-black canvas with ice-blue and violet accents. The illustrations are built with CSS, and Space Grotesk is hosted locally with no external media or font requests.
 
 ## Features
 
@@ -16,7 +16,7 @@ Luxe Glass is a dark, space-inspired landing-page concept that explores a web in
 - Custom range controls, atmospheric scene dissolves, and a reading-progress line
 - Solid-surface mode and browser preference fallbacks
 - Sticky glass navigation and a mobile sidebar with native modal focus handling
-- Locally hosted Space Grotesk typography and Space Mono accents
+- Locally hosted Space Grotesk typography
 - Editable project brief with a copy-to-clipboard action
 - Keyboard, screen-reader, reduced-motion, and high-contrast support
 
